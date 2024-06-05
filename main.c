@@ -12,7 +12,7 @@ int inicializar(int arr[8][8]){
     arr[4][4]=1;
     arr[3][4]=-1;
     arr[4][3]=-1;
-    return arr;
+    return 0;
 }
 
 void iniquadro(int arr[8][8]){
@@ -30,7 +30,7 @@ void iniquadro(int arr[8][8]){
         }
         fclose(file);
     }
-    return 0;
+    return;
 }
 
 void lerquadro(int arr[8][8], int n){
@@ -46,7 +46,7 @@ void lerquadro(int arr[8][8], int n){
         //printf("\n");
     }
     fclose(file);
-    return ;
+    return;
 }
 
 void escquadro(int arr[8][8], int n){
@@ -60,7 +60,7 @@ void escquadro(int arr[8][8], int n){
         }
     }
     fclose(file);
-    return ;
+    return;
 }
 
 void desenhar(int arr[8][8]){
@@ -75,17 +75,17 @@ void desenhar(int arr[8][8]){
         for(int j=0;j<8;j++){
             if(arr[i][j]==1)printf("X");
             if(arr[i][j]==-1)printf("O");
-            if(arr[i][j]==0)printf("_");
+            if(arr[i][j]==0)printf("#");
             if(j<7)printf(" | ");
         }
         printf(" |\n");
     }
-    return ;
+    return;
 
 }
 
 int line(int player, int x1, int y1, int x2, int y2,int arr[8][8]){
-    printf("Line: %d%d : %d%d\n",x1+1,y1+1,x2+1,y2+1);
+    //printf("Line: %d%d : %d%d\n",x1+1,y1+1,x2+1,y2+1);
     if(x2>x1 && y2<y1){
         for(int i = x1;i<=x2;i++){
             for(int j = y2;j<=y1;j++){
@@ -104,96 +104,82 @@ int line(int player, int x1, int y1, int x2, int y2,int arr[8][8]){
             }
         }
     }
-    return arr;
+    return 0;
 }
 
 int movimento(int player, int x, int y, int arr[8][8], int jogar){
-    int d=0,e=0,s=0,b=0,ds=0,db=0,es=0,eb=0,n=0;
-    if(x>1){
-        s=arr[x-1][y];
-        if(y<6){
-            ds=arr[x-1][y+1];
+    int d,e,s,b,ds,db,es,eb,n=0;
+    d=arr[x][y+1];
+    e=arr[x][y-1];
+    s=arr[x-1][y];
+    b=arr[x+1][y];
+    ds=arr[x-1][y+1];
+    db=arr[x+1][y+1];
+    es=arr[x-1][y-1];
+    eb=arr[x+1][y-1];
+    for(int i =2;i<8;i++){
+        if(d*(-1)*player==i-1){
+            if(arr[x][y+i]==player){
+                if(jogar ==1)line(player,x,y,x,y+d*(-1)*player,arr);
+                n++;
+            }
+            d=d+arr[x][y+i];
         }
-        if(y>1){
-            es=arr[x-1][y-1];
+        if(e*(-1)*player==i-1){
+            if(arr[x][y-i]==player){
+                if(jogar ==1)line(player,x,y-e*(-1)*player,x,y,arr);
+                n++;
+            }
+            e=e+arr[x][y-i];
         }
-    }
-    if(x<6){
-        b=arr[x+1][y];
-        if(y<6){
-            db=arr[x+1][y+1];
+        if(s*(-1)*player==i-1){
+            if(arr[x-i][y]==player){
+                if(jogar ==1)line(player,x-s*(-1)*player,y,x,y,arr);
+                n++;
+            }
+            s=s+arr[x-i][y];
         }
-        if(y>1){
-            eb=arr[x+1][y-1];
+        if(b*(-1)*player==i-1){
+            if(arr[x+i][y]==player){
+                if(jogar ==1)line(player,x,y,x+b*(-1)*player,y,arr);
+                n++;
+            }
+            b=b+arr[x+i][y];
         }
-    }
-    if(y>1){
-        e=arr[x][y-1];
-    }
-    if(y<6){
-        d=arr[x][y+1];
-    }
-    if(arr[x][y]==0){
-        for(int i=2;i<8;i++){
-            if(d*(-1)*player==i-1){
-                if(arr[x][y+i]==player){
-                    if(jogar ==1)line(player,x,y,x,y+d*(-1)*player,arr);
-                    n++;
-                }
-                d=d+arr[x][y+i];
+        if(ds*(-1)*player==i-1){
+            if(arr[x-i][y+i]==player){
+                if(jogar ==1)line(player,x-ds*(-1)*player,y+ds*(-1)*player,x,y,arr);
+                n++;
             }
-            if(e*(-1)*player==i-1){
-                if(arr[x][y-i]==player){
-                    if(jogar ==1)line(player,x,y-e*(-1)*player,x,y,arr);
-                    n++;
-                }
-                e=e+arr[x][y-i];
+            ds=ds+arr[x-i][y+i];
+        }
+        if(db*(-1)*player==i-1){
+            if(arr[x+i][y+i]==player){
+                if(jogar ==1)line(player,x,y,x+db*(-1)*player,y+db*(-1)*player,arr);
+                n++;
             }
-            if(s*(-1)*player==i-1){
-                if(arr[x-i][y]==player){
-                    if(jogar ==1)line(player,x-s*(-1)*player,y,x,y,arr);
-                    n++;
-                }
-                s=s+arr[x-i][y];
+            db=db+arr[x+i][y+i];
+        }
+        if(es*(-1)*player==i-1){
+            if(arr[x-i][y-i]==player){
+                if(jogar ==1)line(player,x-es*(-1)*player,y-es*(-1)*player,x,y,arr);
+                n++;
             }
-            if(b*(-1)*player==i-1){
-                if(arr[x+i][y]==player){
-                    if(jogar ==1)line(player,x,y,x+b*(-1)*player,y,arr);
-                    n++;
-                }
-                b=b+arr[x+i][y];
+            es=es+arr[x-i][y-i];
+        }
+        if(eb*(-1)*player==i-1){
+            if(arr[x+i][y-i]==player){
+                if(jogar ==1)line(player,x,y,x+eb*(-1)*player,y-eb*(-1)*player,arr);
+                n++;
             }
-            if(ds*(-1)*player==i-1){
-                if(arr[x-i][y+i]==player){
-                    if(jogar ==1)line(player,x-ds*(-1)*player,y+ds*(-1)*player,x,y,arr);
-                    n++;
-                }
-                ds=ds+arr[x-i][y+i];
-            }
-            if(db*(-1)*player==i-1){
-                if(arr[x+i][y+i]==player){
-                    if(jogar ==1)line(player,x,y,x+db*(-1)*player,y+db*(-1)*player,arr);
-                    n++;
-                }
-                db=db+arr[x+i][y+i];
-            }
-            if(es*(-1)*player==i-1){
-                if(arr[x-i][y-i]==player){
-                    if(jogar ==1)line(player,x-es*(-1)*player,y-es*(-1)*player,x,y,arr);
-                    n++;
-                }
-                es=es+arr[x-i][y-i];
-            }
-            if(eb*(-1)*player==i-1){
-                if(arr[x+i][y-i]==player){
-                    if(jogar ==1)line(player,x,y,x+eb*(-1)*player,y-eb*(-1)*player,arr);
-                    n++;
-                }
-                eb=eb+arr[x+i][y-i];
-            }
+            eb=eb+arr[x+i][y-i];
         }
     }
-    return n;
+    if(n!=0){
+        return n;
+    }else{
+        return 0;
+    }
 }
 
 int conta(int arr[8][8], int player){
@@ -210,10 +196,9 @@ int conta(int arr[8][8], int player){
             }
         }
     }
-    if(p1+p2-4>0)printf("Player X: (%d);  Player O: (%d) ~%d~\n",p1,p2,p1+p2-4);
+    //if(p1+p2-4>7)printf("Player X: (%d);  Player O: (%d) ~%d~\n",p1,p2,p1+p2-4);
     if(player==1){
         return p1;
-
     }else{
         return p2;
     }
@@ -249,7 +234,7 @@ void filesc(int n, int m, char s[2], int x, int y){
         }
     fclose(file[k]);
     }
-    return ;
+    return;
 }
 
 void rand_pesos(int n, int m){
@@ -259,7 +244,7 @@ void rand_pesos(int n, int m){
     filesc(n, m, "1b", 48, 1);
     filesc(n, m, "2b", 24, 1);
     filesc(n, m, "3b", 2, 1);
-    return ;
+    return;
 }
 
 int inipesos (){
@@ -315,7 +300,7 @@ void copy_pesos(int n, int m){
     filcopy("1b", n, m);
     filcopy("2b", n, m);
     filcopy("3b", n, m);
-    return ;
+    return;
 }
 
 void filmut(char s[2], int n, int m, int tom1, int tom2, int r){
@@ -495,66 +480,10 @@ void copy(int arr[8][8], int arr2[8][8]){
                 arr2[i][j]=arr[i][j];
             }
         }
-}
-
-int available(int arr[8][8], int player, int move[20][3]){
-    int r=0;
-    for(int i=0;i<8;i++){
-        for(int j=0;j<8;j++){
-            if(movimento(player,i,j,arr,0)!=0){
-                move[r][0]=i;
-                move[r][1]=j;
-                //printf("Avalable:(%d) %d %d  = %d \n",player,move[r][0]+1,move[r][1]+1,movimento(player,i,j,arr,0));
-                r++;
-            }
-        }
-    }
-    return r;
-}
-
-int group(int arr[8][8], int player, int x, int y){
-    return 1;
-}
-
-int melhor(int arr[8][8], int player, int move[20][3], int r){
-    int arr2[8][8], move2[20][3], ma=0, x, y;
-    int p1=1, p2=1, p3=1, p4=1, p5=1, p6=1;
-    int pesos[8][8] = {{10,-3,2,1,1,2,-3,10},
-    {-3,1,1,2,2,1,1,10},
-    {2,3,2,1,1,2,3,2},
-    {1,2,1,0,0,1,2,1},
-    {1,2,1,0,0,1,2,1},
-    {2,3,2,1,1,2,3,2},
-    {-3,1,1,2,2,1,1,-3},
-    {10,-3,2,1,1,2,-3,10}};
-    for(int i=1;i<r;i++){
-        copy(arr, arr2);
-        movimento(player,move[i][0],move[i][1],arr2,1);
-        x = move[i][0];
-        y = move[i][1];
-        move[i][2]=p1*movimento(player, x, y, arr, 0);
-        move[i][2]=move[i][2]+p2*(16-abs(x-4)-abs(y-4));
-        move[i][2]=move[i][2]-(p3*available(arr2, player*(-1),move2));
-        move[i][2]=move[i][2]+(p4*group(arr, player, x, y));
-        move[i][2]=move[i][2]+p5*pesos[x][y];
-        if(move[i][2]>move[ma][2]){
-            ma=i;
-        }
-    }
-    return ma;
-}
-
-void algoritmo(int arr[8][8], int player){
-    int r, move[20][3], ma;
-    r = available(arr, player, move);
-    //printf("Test 1\n");
-    ma = melhor(arr, player, move, r);
-    printf("Hod: %d %d\n", move[ma][0]+1,move[ma][1]+1);
-    movimento(player,move[ma][0],move[ma][1],arr,1);
     return ;
 }
 
-void algoritmo_2(int arr[8][8], int player){
+void algoritmo(int arr[8][8], int player){
     int i,j;
     i=(int)round(rand() % (8 + 1 - 0));
     j=(int)round(rand() % (8 + 1 - 0));
@@ -566,6 +495,39 @@ void algoritmo_2(int arr[8][8], int player){
     }
     //printf("Movimento: %d %d\n", i+1, j+1);
     //conta(arr,player);
+    return;
+}
+
+void algoritmo_2(int arr[8][8], int player){
+    for(int i=0;i<8;i++){
+        for(int j=0;j<8;j++){
+            if(movimento(player, i ,j ,arr,1)!=0){
+                return;
+            }
+        }
+    }
+    return ;
+}
+
+void algoritmo_3(int arr[8][8], int player){
+    int r=0, move[20][3], ma=0;
+    for(int i=0;i<8;i++){
+        for(int j=0;j<8;j++){
+            if(movimento(player,i,j,arr,0)!=0){
+                move[r][0]=i;
+                move[r][1]=j;
+                move[r][2]=movimento(player,i,j,arr,0);
+                move[r][2]=move[r][2]+16-abs(j-4)-abs(i-4);
+                r++;
+            }
+        }
+    }
+    for(int i=1;i<r;i++){
+        if(move[r][2]>move[ma][2]){
+            ma=r;
+        }
+    }
+    movimento(player,move[ma][0],move[ma][1],arr,1);
     return ;
 }
 
@@ -645,14 +607,15 @@ void evolv(int bom[100][2]){
             rand_pesos(bom[i][0], bom[i][0]+1);
         }
     }
+    return ;
 }
 
 void vez()
 {
-    int arr[8][8], move[20][3];
+    int arr[8][8];
     inicializar(arr);
-    //iniquadro(arr);
-    desenhar(arr);
+    iniquadro(arr);
+    //desenhar(arr);
     int turn=1;
     int x,y,player=1;
     int quant_nn=100, bom[quant_nn][2];
@@ -661,7 +624,7 @@ void vez()
        bom[i][0] = i;
     }
     //inipesos();
-    while(turn<61){
+    while(turn<10){
         if(player==0){
             printf("Player: X\n");
             printf("Escreve sua movimento:");
@@ -672,7 +635,7 @@ void vez()
                 }else{
                     printf("Great move!\n");
                     //system("cls");
-                    desenhar(arr);
+                    //desenhar(arr);
                     //conta(arr, player);
                     player=player*(-1);
                     turn=turn+1;
@@ -680,48 +643,43 @@ void vez()
             }else{
                 printf("The movement is unavalble, choose other point\n");
             }
-        }else if(player==-1){
-            if(available(arr,player,move)==0){
-                player=player*(-1);
-            }else{
-                algoritmo_2(arr, player);
-                desenhar(arr);
-                conta(arr, player);
-                //if(available(arr,player,move)==0)
-                player=player*(-1);
-                turn=turn+1;
+        }else{
+            for(int i=1;i<100;i=i+1){
+                //printf("Player: X\n");
+                lerquadro(arr,i);
+                //desenhar(arr);
+                //tentativa(arr, 50+i, player*(-1), bom, turn);
+                algoritmo(arr, 1);
+                //algoritmo_2(arr, 1);
+                //desenhar(arr);
+                //printf("Player: O\n");
+                tentativa(arr, i, -1, bom, turn);
+                escquadro(arr,i);
             }
-
-        }else if(player==1){
-            if(available(arr,player,move)==0){
-                player=player*(-1);
-            }else{
-                algoritmo(arr, player);
-                desenhar(arr);
-                conta(arr, -player);
-                player=player*(-1);
-                turn=turn+1;
-            }
-        }
-        if(available(arr,1,move)==0 && available(arr,-1,move)==0){
-            turn=61;
+            /*if(turn >= 7){
+                for(int i=0;i<10; i++){
+                    if(bom[i][1]>0)printf("Turn: %d, (%d) = %d\n",turn,bom[i][0],bom[i][1]);
+                }
+            }*/
+            //player=player*(-1);
+            turn=turn+1;
+            //printf("-----------------%d---------------\n",turn);
         }
     }
-    printf("~FINAL~");
-    //bubble_Sort(bom);
-    //printf("~Sortei~\n");
+    bubble_Sort(bom);
+    printf("~Sortei~\n");
     /*for(int i=0;i<100; i++){
         if(bom[i][1]>3)printf("%d = %d\n",bom[i][0],bom[i][1]);
     }*/
-    //evolv(bom);
-    //printf("~FINAL~");
+    evolv(bom);
+    printf("~FINAL~");
     return ;
 }
 
 int main()
 {
     srand(time(0));
-    for(int i=0;i<1;i++){
+    for(int i=0;i<1500;i++){
         printf("%d)\n",i);
         vez();
     }
