@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-int inicializar(int arr[8][8]){
+int inicializar(int arr[8][8]){//funcao para inicializar o quadro primeiro
     for(int i=0;i<8;i++){
         for(int j=0;j<8;j++){
             arr[i][j]=0;
@@ -15,7 +15,7 @@ int inicializar(int arr[8][8]){
     return 0;
 }
 
-void iniquadro(int arr[8][8]){
+void iniquadro(int arr[8][8]){//criar 50 quadros para jogos
     FILE *file;
     char filename[7];
     for(int k=0;k<100;k++){
@@ -107,79 +107,93 @@ int line(int player, int x1, int y1, int x2, int y2,int arr[8][8]){
     return 0;
 }
 
-int movimento(int player, int x, int y, int arr[8][8], int jogar){
-    int d,e,s,b,ds,db,es,eb,n=0;
-    d=arr[x][y+1];
-    e=arr[x][y-1];
-    s=arr[x-1][y];
-    b=arr[x+1][y];
-    ds=arr[x-1][y+1];
-    db=arr[x+1][y+1];
-    es=arr[x-1][y-1];
-    eb=arr[x+1][y-1];
-    for(int i =2;i<8;i++){
-        if(d*(-1)*player==i-1){
-            if(arr[x][y+i]==player){
-                if(jogar ==1)line(player,x,y,x,y+d*(-1)*player,arr);
-                n++;
-            }
-            d=d+arr[x][y+i];
+int movimento(int player, int x, int y, int arr[8][8], int jogar){//funcao para ver se o movimeto eh possivel
+    int d=0,e=0,s=0,b=0,ds=0,db=0,es=0,eb=0,n=0;//variaveis para cada dorecao no quadro (cima, baiho, esquerda, direita, e diagonais dentre deles
+    if(x>1){ //vemos se a borda eh perta para nao passar dentro dela e tomamos valores de pontos no cada direcao
+        s=arr[x-1][y];
+        if(y<6){
+            ds=arr[x-1][y+1];
         }
-        if(e*(-1)*player==i-1){
-            if(arr[x][y-i]==player){
-                if(jogar ==1)line(player,x,y-e*(-1)*player,x,y,arr);
-                n++;
-            }
-            e=e+arr[x][y-i];
-        }
-        if(s*(-1)*player==i-1){
-            if(arr[x-i][y]==player){
-                if(jogar ==1)line(player,x-s*(-1)*player,y,x,y,arr);
-                n++;
-            }
-            s=s+arr[x-i][y];
-        }
-        if(b*(-1)*player==i-1){
-            if(arr[x+i][y]==player){
-                if(jogar ==1)line(player,x,y,x+b*(-1)*player,y,arr);
-                n++;
-            }
-            b=b+arr[x+i][y];
-        }
-        if(ds*(-1)*player==i-1){
-            if(arr[x-i][y+i]==player){
-                if(jogar ==1)line(player,x-ds*(-1)*player,y+ds*(-1)*player,x,y,arr);
-                n++;
-            }
-            ds=ds+arr[x-i][y+i];
-        }
-        if(db*(-1)*player==i-1){
-            if(arr[x+i][y+i]==player){
-                if(jogar ==1)line(player,x,y,x+db*(-1)*player,y+db*(-1)*player,arr);
-                n++;
-            }
-            db=db+arr[x+i][y+i];
-        }
-        if(es*(-1)*player==i-1){
-            if(arr[x-i][y-i]==player){
-                if(jogar ==1)line(player,x-es*(-1)*player,y-es*(-1)*player,x,y,arr);
-                n++;
-            }
-            es=es+arr[x-i][y-i];
-        }
-        if(eb*(-1)*player==i-1){
-            if(arr[x+i][y-i]==player){
-                if(jogar ==1)line(player,x,y,x+eb*(-1)*player,y-eb*(-1)*player,arr);
-                n++;
-            }
-            eb=eb+arr[x+i][y-i];
+        if(y>1){
+            es=arr[x-1][y-1];
         }
     }
-    if(n!=0){
-        return n;
-    }else{
-        return 0;
+    if(x<6){//vemos se a borda eh perta para nao passar dentro dela
+        b=arr[x+1][y];
+        if(y<6){
+            db=arr[x+1][y+1];
+        }
+        if(y>1){
+            eb=arr[x+1][y-1];
+        }
     }
+    if(y>1){//vemos se a borda eh perta para nao passar dentro dela
+        e=arr[x][y-1];
+    }
+    if(y<6){//vemos se a borda eh perta para nao passar dentro dela
+        d=arr[x][y+1];
+    }
+    if(arr[x][y]==0){//se o lugar de movimeno eh vazil continuamos
+        for(int i=2;i<8;i++){ //vemos para cada dos direcoes
+            if(d*(-1)*player==i-1){ //se o ponto atual eh ocupado com outro jogador - adicionamos para cunta nesse derecao
+                if(arr[x][y+i]==player){ // se segou no ponto de jogador, desenhaamos a linha fechando a direcao
+                    if(jogar ==1)line(player,x,y,x,y+d*(-1)*player,arr);
+                    n++;
+                }
+                d=d+arr[x][y+i];
+            }
+            if(e*(-1)*player==i-1){ //repetimos para cada direcao
+                if(arr[x][y-i]==player){
+                    if(jogar ==1)line(player,x,y-e*(-1)*player,x,y,arr);
+                    n++;
+                }
+                e=e+arr[x][y-i];
+            }
+            if(s*(-1)*player==i-1){
+                if(arr[x-i][y]==player){
+                    if(jogar ==1)line(player,x-s*(-1)*player,y,x,y,arr);
+                    n++;
+                }
+                s=s+arr[x-i][y];
+            }
+            if(b*(-1)*player==i-1){
+                if(arr[x+i][y]==player){
+                    if(jogar ==1)line(player,x,y,x+b*(-1)*player,y,arr);
+                    n++;
+                }
+                b=b+arr[x+i][y];
+            }
+            if(ds*(-1)*player==i-1){
+                if(arr[x-i][y+i]==player){
+                    if(jogar ==1)line(player,x-ds*(-1)*player,y+ds*(-1)*player,x,y,arr);
+                    n++;
+                }
+                ds=ds+arr[x-i][y+i];
+            }
+            if(db*(-1)*player==i-1){
+                if(arr[x+i][y+i]==player){
+                    if(jogar ==1)line(player,x,y,x+db*(-1)*player,y+db*(-1)*player,arr);
+                    n++;
+                }
+                db=db+arr[x+i][y+i];
+            }
+            if(es*(-1)*player==i-1){
+                if(arr[x-i][y-i]==player){
+                    if(jogar ==1)line(player,x-es*(-1)*player,y-es*(-1)*player,x,y,arr);
+                    n++;
+                }
+                es=es+arr[x-i][y-i];
+            }
+            if(eb*(-1)*player==i-1){
+                if(arr[x+i][y-i]==player){
+                    if(jogar ==1)line(player,x,y,x+eb*(-1)*player,y-eb*(-1)*player,arr);
+                    n++;
+                }
+                eb=eb+arr[x+i][y-i];
+            }
+        }
+    }
+    return n; //voltamos a longitude das linhas desenhadas, se nao desenhou nada - voltamos zero significa que jogo eh impossivel
 }
 
 int conta(int arr[8][8], int player){
@@ -204,7 +218,7 @@ int conta(int arr[8][8], int player){
     }
 }
 
-float f(float n){
+float f(float n){//
     //return ((1 / (1 + exp(-n))));
     //if(n>0)return n;
     //if(n<=0)return 0;
